@@ -33,7 +33,7 @@ namespace pnapi
  *
  * \note This constructor does not instantiate a Petri net object.
  */
-Marking::Marking() : net_(NULL)
+Marking::Marking() : net_(NULL), numOfRel_(0), rel_(NULL)
 {
 }
 
@@ -48,7 +48,7 @@ Marking::Marking() : net_(NULL)
  *               instead of reading marking from n
  */
 Marking::Marking(PetriNet & n, bool empty) :
-  net_(&n)
+  net_(&n), rel_(NULL), numOfRel_(0)
 {
   PNAPI_FOREACH(p, n.getPlaces())
   {
@@ -63,7 +63,8 @@ Marking::Marking(PetriNet & n, bool empty) :
  * \param   m the other Marking
  */
 Marking::Marking(const Marking & m) :
-  m_(m.m_), net_(m.net_)
+  m_(m.m_), net_(m.net_), rel_(NULL), numOfRel_(0)
+
 {
 }
 
@@ -72,7 +73,7 @@ Marking::Marking(const Marking & m) :
  * \brief   Another constructor.
  */
 Marking::Marking(std::map<const Place *, unsigned int> m, PetriNet * net) :
-  m_(m), net_(net)
+  m_(m), net_(net), rel_(NULL), numOfRel_(0)
 {
 }
 
@@ -81,7 +82,7 @@ Marking::Marking(std::map<const Place *, unsigned int> m, PetriNet * net) :
  */
 Marking::Marking(const Marking & m, PetriNet * net, 
                   std::map<const Place *, const Place *> & placeMap) :
-  net_(net)
+  net_(net), rel_(NULL), numOfRel_(0)
 {
   PNAPI_FOREACH(it, m.m_)
   {
@@ -228,16 +229,27 @@ void Marking::clear()
 {
   m_.clear();
 }
-/*get all activated transition from the current marking */
+
+/*!
+ * get all activated transition from the current marking
+ */
 std::set<Transition *>  Marking::getActivateTransitions() const
 {
-	set<Transition *> tt ;
+	std::set<Transition *> tt ;
 	PNAPI_FOREACH (t,net_->getTransitions())
 	{
 		if (this->activates(**t))
 			tt.insert(*t);
 	}
 	return tt;
+}
+/*!
+ * add new successor marking to a marking.
+ */
+void Marking::addSuccessor(Marking m)
+{
+	numOfRel_++;
+	*(rel_+numOfRel_)=m;
 }
 
 

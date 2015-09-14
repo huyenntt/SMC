@@ -9,14 +9,17 @@
 #define GRAPH_H_
 #include  "marking.h"
 
+
+
 namespace pnapi
 {
 class Place;
 class Marking;
+class Transition;
 
 class Graph {
 private:
-		std::set<Marking * > Mset_; // set of reachable markings
+		std::vector<Marking> Mset_; // set of reachable markings
 		Marking * init_; // initial marking
 public:
 	Graph();
@@ -24,9 +27,9 @@ public:
 	Graph(Marking m);
 	//Marking * getInitialMarking();
 	//void setInitialMarking(const Marking & m);
-	void addSuccessors(const Marking * m);
+	void addMarking(Marking & m);
 	void printing();
-	bool check_reachable_place(Place * p_);
+	bool check_reachable_place(Place * p);
 	int getNumMarking();
 }; // end of class
 

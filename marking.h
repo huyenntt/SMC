@@ -33,6 +33,7 @@ private: /* private variables */
   std::map<const Place *, unsigned int> m_;
   PetriNet * net_;
   Marking * rel_;  // store related markings in the reachability graph.
+  int numOfRel_;  // number of relate markings
   
 public: /* public methods */
   /*!
@@ -88,6 +89,8 @@ public: /* public methods */
 
   // get all transitions activated from marking m
   std::set<Transition *> getActivateTransitions() const;
+  // set the relative markings of a marking
+  void addSuccessor(Marking m);
 
   /// get writing access to the marking of a given place
   unsigned int & operator[](const Place &);

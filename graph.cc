@@ -9,16 +9,21 @@
 
 
 #include <iostream>
+#include  <vector>
 
 #include "graph.h"
+#include "component.h"
+
 
 using std::cout;
 using std::endl;
 using std::map;
-using std::set;
+using std::vector;
+
 
 namespace pnapi
 {
+
 Graph::Graph() {
 	// TODO Auto-generated constructor stub
 	init_=NULL;
@@ -32,9 +37,8 @@ Graph::~Graph() {
 Graph::Graph(Marking m)
 {
 	init_=&m;
-	Marking * p;
-	p=&m;
-	Mset_.insert(p);
+//	std::vector<Marking>::iterator it=Mset_.begin();
+	Mset_.push_back(m);
 }
 
 /*Marking * Graph::getInitialMarking()
@@ -59,26 +63,21 @@ int Graph::getNumMarking()
 
 //----add all successors of marking m to the graph
 
-void Graph::addSuccessors(const Marking * m)
+void Graph::addMarking(Marking & m)
 {
-		Marking * succ;
+	std::set<Transition *> at=m.getActivateTransitions();
+	std::cout<<"Number of activate transitions: "<< at.size()<<std::endl;
+	if (at.empty())	return;
 
-		std::set<Transition *> at= m->getActivateTransitions();
-		if (at.empty())	return;
+	std::set<Transition *>::iterator it;
+	for (it=at.begin();it!=at.end();++it)
+	{
+		Mset_.push_back(m.getSuccessor(**it));
+		//m.addSuccessor(m.getSuccessor(**it));
+	}
 
-		PNAPI_FOREACH(it,at)
-		{
-			Marking & a=m->getSuccessor(**it);
-			for (std::set<Marking *>::iterator i=Mset_.begin();i!=Mset_.end();++i)
-			{
-				if (succ==*i)
-
-					return;
-				else
-					Mset_.insert(succ);
-			}
-			addSuccessors(succ);
-		}
+	std::cout<<"Quantity of Marking in the graph:  "<<Mset_.size()<<std::endl;
+	return ;
 }
 
 
